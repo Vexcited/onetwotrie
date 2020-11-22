@@ -33,6 +33,14 @@
     <title>OneTwoTrie - Docs</title>
 
     <style>
+      :root {
+        --nav-text: #fff;
+      }
+      body {
+        background: url('https://images.unsplash.com/photo-1550236520-7050f3582da0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80') top center / cover no-repeat fixed;
+        padding: 0;
+        margin: 0;
+      }
       a {
         color: #0cc990;
       }
@@ -69,12 +77,43 @@
 
       .footer {
         padding-bottom: 4rem;
+        background-color: rgb(255, 255, 255);
+      }
+
+      .hero.is-medium {
+        height: 50vh;
+      }
+      .title,.subtitle {
+        color: #fff;
+      }
+      .hero-body.main {
+        position: fixed;
+        z-index: 0;
+      }
+      .hero.is-primary {
+        z-index: 10;
+        position: relative;
+        margin: 0;
+      }
+
+      nav.is-transparent {
+        z-index: 128;
+        background-color: var(--nav-back);
+        transition: all 0.3s;
+      }
+      .navbar-item {
+        color: var(--nav-text);
+        transition: all 0.3s;
+      }
+      .is-white {
+        background-color: #fff;
+        margin: 0;
       }
     </style>
 </head>
 <body>
 
-    <nav class="navbar has-shadow" role="navigation" aria-label="main navigation">
+    <nav class="navbar is-transparent is-fixed-top" role="navigation" aria-label="main navigation" id="navbar">
         <div class="container is-fluid">
           <div class="navbar-brand">
             <a class="navbar-item" href="#">
@@ -96,8 +135,8 @@
         </div>
       </nav>
 
-      <section class="hero is-grey is-medium">
-        <div class="hero-body">
+      <section class="hero is-medium" id="main">
+        <div class="hero-body main">
           <div class="container">
             <h1 class="title">
               OneTwoTrie : Un pas de plus vers l'écologie
@@ -119,10 +158,8 @@
           </p>
         </div>
       </section>
-
-      <br>
-
-        <div class="container is-fluid">
+        <div class="container is-fluid is-white">
+          <br>
             <div class="columns">
                 <div class="column">
                     <div class="card">
@@ -164,10 +201,8 @@
                       </div>
                 </div>
             </div>
+            <br>
         </div>
-
-        <br>
-
       <section id="api" class="hero is-primary">
         <div class="hero-body">
           <p class="title">
@@ -178,10 +213,8 @@
           </p>
         </div>
       </section>
-
-      <br>
-
-      <div class="container is-fluid">
+      <div class="container is-fluid is-white">
+        <br>
         <div class="has-text-centered">
           <p class="is-size-3">Endpoint API</p>
           <code>https://www.vexcited.ml/api/onetwotrie</code>
@@ -265,13 +298,12 @@
 }
 </pre>
 
-        
+        <br>
         
       </div>
 
-      <br> <br> <br>
-
       <footer class="footer">
+        <hr>
         <div class="content has-text-centered">
           <p>
             <strong>OneTwoTrie : Un pas de plus vers l'écologie</strong> <br>
@@ -280,110 +312,56 @@
           </p>
         </div>
       </footer>
+      <script>
+          document.addEventListener('DOMContentLoaded', function () {
 
-      
-<!-- 
-    <div class="container h-100">
-        <div class="row h-100 justify-content-center align-items-center">
-            <div class="col-12 text-center" style="z-index:99;">
-                <img height="128px" width="128px" class="img-fluid" src="https://vexcited.github.io/onetwotrie/pages/images/icon.png" alt="">
-                <h1 class="display-1">OneTwoTrie</h1>
-                <p class="lead">... et un pas de plus vers l'écologie.</p>
+            // Get all "navbar-burger" elements
+            var $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
 
-                <p class="lead">
-                    Application / 
-                    <a data-toggle="modal" data-target="#desktop" href="javascript:void(0);">PC</a>
-                     - 
-                     <a data-toggle="modal" data-target="#mobile" href="javascript:void(0);">Mobile</a>
-                </p>
-                
-                <p class="lead">
-                    <a href="https://github.com/vexcited/onetwotrie/">Code</a>
-                     - 
-                    <a href="https://vexcited.github.io/onetwotrie/">Application</a>
-                </p>
-            </div>
-        </div>
-    </div>
+            // Check if there are any navbar burgers
+            if ($navbarBurgers.length > 0) {
 
-    <div class="modal fade" id="desktop" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title">Application PC</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <div class="modal-body">
-                <h2>Windows</h2>
-                <p><a href="https://github.com/Vexcited/onetwotrie/releases/download/desktop-v12.08.2020/setup-onetwotrie-1208202.msi">- Version installable (.msi | Recommandée !)</a> <br>
-                <a href="https://github.com/Vexcited/onetwotrie/releases/download/desktop-v12.08.2020/portable-onetwotrie-1208202-win32-ia32.zip">- Version portable (sans installation)</a>
-                </p>
-                <h2>Linux</h2>
-                <p>Aucune version est disponible actuellement, désolé !</p>
-                <h2>Mac OS</h2>
-                <p>Aucune version est disponible actuellement, désolé !</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-            </div>
-        </div>
-        </div>
-    </div>
+              // Add a click event on each of them
+              $navbarBurgers.forEach(function ($el) {
+                $el.addEventListener('click', function () {
 
-    <div class="modal fade" id="mobile" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title">Application Mobile</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <div class="modal-body">
-                <h2>Android</h2>
-                <p><a href="https://github.com/Vexcited/onetwotrie/releases/download/mobile-v19.08.2020/onetwotrie-mobile-v19082020.apk">- APK</a></p>
-                <h2>iOS</h2>
-                <p>Aucune version est disponible actuellement, désolé !</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-            </div>
-        </div>
-        </div>
-    </div>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script>
--->
+                  // Get the target from the "data-target" attribute
+                  var target = $el.dataset.target;
+                  var $target = document.getElementById(target);
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-
-      // Get all "navbar-burger" elements
-      var $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
-
-      // Check if there are any navbar burgers
-      if ($navbarBurgers.length > 0) {
-
-        // Add a click event on each of them
-        $navbarBurgers.forEach(function ($el) {
-          $el.addEventListener('click', function () {
-
-            // Get the target from the "data-target" attribute
-            var target = $el.dataset.target;
-            var $target = document.getElementById(target);
-
-            // Toggle the class on both the "navbar-burger" and the "navbar-menu"
-            $el.classList.toggle('is-active');
-            $target.classList.toggle('is-active');
+                  // Toggle the class on both the "navbar-burger" and the "navbar-menu"
+                  $el.classList.toggle('is-active');
+                  $target.classList.toggle('is-active');
+                  let root = document.documentElement;
+                  var Navbar = document.getElementById('navbar');
+                  var NavbarHeight = Navbar.clientHeight;
+                  root.style.setProperty('--NavbarHeight', NavbarHeight + 'px')
+                });
+              });
+            }
+            let root = document.documentElement;
+            var Navbar = document.getElementById('navbar');
+            var NavbarHeight = Navbar.clientHeight;
+            root.style.setProperty('--NavbarHeight', NavbarHeight + 'px')
 
           });
-        });
-      }
+          window.onscroll = function() {scrollFunction()};
 
-    });
-  </script>
-
-
+          function scrollFunction() {
+            let root = document.documentElement;
+            var Navbar = document.getElementById('navbar');
+            var NavbarHeight = Navbar.clientHeight;
+            var Main = document.getElementById("main");
+            if (document.documentElement.scrollTop > (Main.clientHeight - (NavbarHeight * 2))){
+              root.style.setProperty('--nav-back', '#ffffffcc');
+              root.style.setProperty('--nav-text', '#000');
+              // root.style.setProperty('--nav-position', 'fixed');
+            } else {
+              root.style.setProperty('--nav-back', 'transparent');
+              root.style.setProperty('--nav-text', '#fff');
+              // root.style.setProperty('--nav-position', 'absolute');
+            }
+          }
+        </script>
 </body>
 </html>
