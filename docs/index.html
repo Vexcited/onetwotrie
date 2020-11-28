@@ -23,11 +23,8 @@
     <meta name="og:description" content="OneTwoTrie: et un pas de plus vers l'écologie"/>
     <meta name="og:email" content="vexitofficial@gmail.com"/>
 
-    <!-- CSS 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
--->
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    
     <!-- Icon -->
     <link rel="shortcut icon" href="https://vexcited.github.io/onetwotrie/pages/images/icon.ico" type="image/x-icon">
     <title>OneTwoTrie - Docs</title>
@@ -113,6 +110,11 @@
       .is-white {
         background-color: #fff;
         margin: 0;
+      }
+        
+      .is-black {
+          color: #000;
+          margin-bottom: 1.5rem;
       }
         
       hr#lastBreakLine {
@@ -234,12 +236,12 @@
         <br>
         <div class="has-text-centered">
           <p class="is-size-3">Endpoint API</p>
-          <code>https://www.vexcited.ml/api/onetwotrie</code>
+          <pre>https://www.vexcited.ml/api/onetwotrie</pre>
         </div>
 
         <br> <br>
 
-        <p class="title">
+        <p>
           <code>GET /searchProduct</code>
         </p>
 
@@ -247,7 +249,7 @@
           Peut être le <b>nom du produit</b>, <b>sa marque</b> ou <b>son code-barres</b>.</p>
         <p><code>q</code>  - Query (<b>Obligatoire</b>)</p> <br>
 
-        <p class="subtitle"><b>Exemple</b> de retour avec <code>/searchProduct?q=Cristaline</code></p>
+        <p class="is-black"><b>Exemple</b> de retour avec <code>/searchProduct?q=Cristaline</code></p>
 
 <pre>
 {
@@ -270,7 +272,7 @@
 
 <br> <hr> <br>
 
-        <p class="title">
+        <p>
           <code>GET /searchCity</code>
         </p>
 
@@ -278,7 +280,7 @@
           Peut être le nom de la <b>ville</b> ou du <b>code-postal</b>.</p>
         <p><code>q</code>  - Query (<b>Obligatoire</b>)</p> <br>
 
-        <p class="subtitle"><b>Exemple</b> de retour avec <code>/searchCity?q=Limoges</code></p>
+        <p class="is-black"><b>Exemple</b> de retour avec <code>/searchCity?q=Limoges</code></p>
 
 <pre>
 {
