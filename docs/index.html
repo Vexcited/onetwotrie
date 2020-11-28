@@ -72,8 +72,12 @@
 
       a.navbar-item:hover {
         color: #0cc990;
-        /* background-color: transparent; */
+        background-color: transparent;
         padding: .5rem 1.25rem;
+      }
+        
+      .navbar-burger {
+          color: var(--nav-text);
       }
 
       .footer {
@@ -113,6 +117,14 @@
         
       hr#lastBreakLine {
         margin: 0;
+      }
+        
+      @media screen and (max-width: 1023px) {
+        .navbar-menu {
+            background-color: #fff0;
+            box-shadow: unset;
+            text-align: end;
+          }
       }
     </style>
 </head>
