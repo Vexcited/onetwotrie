@@ -1,371 +1,492 @@
-// Settings
-var times_i_form = 0,
-    geolocalised = false,
-    searchProductUrl = 'https://www.vexcited.ml/api/onetwotrie/searchProduct?q=',
-    searchCityUrl = 'https://www.vexcited.ml/api/onetwotrie/searchCity?q=',
-    request = new XMLHttpRequest(),
-    searchField = villeField = '',
-    longitude, latitude,
-    recyalgeJsonHasBeenLoaded = false;
+'use strict'
 
-// Start QuaggaJS for #camera
-function startQuagga() {
-  Quagga.init({
-    inputStream : {
-      name : "Live",
-      type : "LiveStream",
-      target: document.querySelector('#livestream')
-    },
-    numOfWorkers: 8,
-    decoder: {
-      readers: [
-        {"format":"ean_8_reader", "config":{"supplements":[]}},
-        {"format":"ean_reader", "config":{"supplements":[]}},
-        {"format":"ean_reader", "config":{"supplements":['ean_5_reader', 'ean_2_reader']}}
-        ],
-    }
-  }, function(err) {
-    if (err) {
-      console.log(err);
-      return
-    }
-    Quagga.start();
-  });
+// Initialisation
+let api = 'https://api.vexcited.ml/onetwotrie'
+let geolocalised = false, consignesHasBeenLoaded = false
+let longitude, latitude;
+let lastDetected;
+
+// Methods
+const get = (el) => {
+    return document.querySelector(el)
 }
 
-// Search a product in #scanner's input
-$('#scanner').keyup(function(){  
-	if($(this).val() === '') {
-    $('#filter-records').html('');
-    $('#scanner').css('border-radius', '4px');
-		return;
-  }
-
-  $.get(searchProductUrl + $(this).val(), function(products){
-    var output = '',
-        count = 0;
-
-    if (products['status'] == true) {
-      $.each(products['results'], function(key, val){
-        count++;
-        
-        if (count < 5){
-          output += '<li> \
-          <a href="javascript:void(0)" onclick="changeModal(' + val.barcode + ')">' +
-          val.brand + ' - ' + val.name 
-          + '<img class="image_search" src="' + val.image + '"></img></a></li>';
-        }
-      });
-    }
-    else if (products['status'] == false) {
-      output += '<li><a href="javascript:void(0)">Erreur serveur</a></li>';
-      output += '<li><a href="javascript:void(0)">Veuillez réesayer</a></li>';
-    }
-
-    $('#scanner').css('border-radius', '4px 4px 0 0');
-    $('#filter-records').html('<ul class="box">' + output + '<span style="height: 5px; display: block;"></span></ul>');
-  });
-});
-
-// Search a city in #localisation's input
-$('#localisation').keyup(function(){
-  if($(this).val() === '') {
-    $('#filter-ville').html('');
-    $('#localisation').css('border-radius', '4px');
-    return;
-  }
-
-  $.get(searchCityUrl + $(this).val(), function(cities){
-    var citiesOut = '',
-        cityNums = 0;
-  
-    if (cities['status'] == true) {
-      $.each(cities['results'], function(key, val){
-        cityNums++;
-        
-        if (cityNums < 8){
-          citiesOut += '<li><a href="javascript:void(0)" onclick="startInputGeo(\''+val['name']+'\', $(\'#geoTypeBefore\').val());">' + val['name'] + '</a></li>';
-        }
-      });
-    }
-    else if (cities['status'] == false) {
-      citiesOut += '<li><a href="javascript:void(0)">Erreur serveur</a></li>';
-      citiesOut += '<li><a href="javascript:void(0)">Veuillez réesayer</a></li>';
-    }
-  
-    $('#localisation').css('border-radius', '4px 4px 0 0');
-    $('#filter-ville').html('<ul class="boxCity box">' + citiesOut + '<span style="height: 5px; display: block;"></span></ul>');
-  });    
-});
-
-/****** - Functions -  ******/
-
-function startInputGeo (city, type){
-  $('#cityGeo').val(city);
-  geolocalised = true;
-
-  GetCity(type);
-}
-
+// Style functions
 // Show the results if input is focused
-function show(id){
-    $(".box").fadeIn();
-    $('.box').css('display', 'block');
+const show = (el) => {
+    if (el.value.trim() != "") {
+        let box = get(".box")
 
-    if($('#' + id).val() != '') {
-      $('#' + id).css('border-radius', '4px 4px 0 0');
+        box.style.opacity = 0;
+        box.style.display = "block";
+        (function fade() {
+            var val = parseFloat(box.style.opacity);
+            if (!((val += .1) > 1)) {
+                box.style.opacity = val;
+                requestAnimationFrame(fade);
+            }
+        })()
+
+        el.style.borderRadius = "4px 4px 0 0"
     }
 }
 
 // Hide the results if input is not focused
-function hide(id){
-  $(".box").fadeOut();
-    setTimeout(
-        function(){
-            $('.box').css('display', 'none');
-            $('#' + id).css('border-radius', '4px');
-        }, 250
-    );
+const hide = (el) => {
+    if (el.value.trim() != "") {
+        let box = get(".box")
+
+        box.style.opacity = 1;
+        (function fade() {
+            if ((box.style.opacity -= .1) < 0) {
+                box.style.display = "none";
+            }
+            else {
+                requestAnimationFrame(fade);
+            }
+        })();
+
+        el.style.borderRadius = "4px"
+    }
 }
 
-function geolocalise () {
-  var type = $('#geoTypeBefore').val();
-  navigator.geolocation.getCurrentPosition(function(position) {
-    latitude = position.coords.latitude;
-    longitude = position.coords.longitude;
-    geolocalised = true;
-    GetCity(type);
-  });
-}
-
-function finalizeProduct (type, city){
-  var cityRules = JSON.parse($('#consignesCity').val());
-
-  if(type != 'autre'){
-    var consignes = cityRules[type];
-  }
-  else{
-    var consignes = 'déchetterie';
-  }
-  
-  $('#recycleItem').html('Vous recyclez à <strong>' + city + '</strong><br>Ce produit se met (dans le/à la) <strong>' + consignes + '</strong>.');
-
-  // Hide the loader (anyway)
-  $("#geoStatus").html('Géolocaliser votre appareil');
-
-  // Go to product page
-  location.hash = 'product';
-}
-
-function consignes (city, type){
-  if($('#consignesCity').val() === ''){
-    $.getJSON(searchCityUrl + city, function(recyclage){
-      $('#consignesCity').val(JSON.stringify(recyclage['results'][0]['consignes']));
-      finalizeProduct(type, city);
-    });
-  }
-  else{
-      finalizeProduct(type, city);
-  }    
-}
-
-function GetCity (type){
-  // Show a loader while getJSON
-  $("#geoStatus").html('Chargement...');
-
-  if($('#cityGeo').val() === ''){
-    $.getJSON("https://api-adresse.data.gouv.fr/reverse/?lon=" + longitude + "&lat=" + latitude, function(data){
-      var item = data.features[0].properties.city;
-      $('#cityGeo').val(item);
-      consignes(item, type);
-    });
-  }
-  else{
-    consignes($('#cityGeo').val(), type);
-  }
-}
-
-
-function checkGeolocalisation (type){
-  if(geolocalised === false){
-    $('#geoTypeBefore').val(type);
-    location.hash = 'geolocalisation';
-  }
-  else if(geolocalised === true){
-    GetCity(type);
-  }
-}
-
-
-function checkAlternatives (name, alimentaire){
-  var alt_count = 0,
-      infos = '';
-
-  if(alimentaire === 'yes'){
-    alt_count++;
-    infos += '<a href="https://www.marmiton.org/recettes/recherche.aspx?type=all&aqt='+ name +'">Voir des recettes (Marmitton)</a>';
-  }
-
-  if(alt_count === 0){
-    return '<h4>Aucune alternatives à été trouvé pour ce produit.</h4>';
-  }
-  else{
-    return '<h2>Alternatives</h2>' + infos;
-  }
-}
-
-// Change page to #product when a product is clicked in `Rechercher un produit`
-function changeModal ($barcode) {
-  $.get(searchProductUrl, function(products){
-    $.each(products['results'], function(key, val){
-      if(val.barcode == $barcode){
-        if($('#image_generated').length){
-          var hrefImage = $('#image_generated').attr('href');
-          if(hrefImage === val.image){
-            var newTitle = val.brand + ' - ' + val.name + ' - ' + val.barcode;
-            $('#image_generated').attr('title', newTitle);
-          }
+// Démarrer QuaggaJS  pour #camera => div#livestream
+const startQuagga = () => {
+    Quagga.init({
+        inputStream : {
+            name : "Live",
+            type : "LiveStream",
+            target: document.querySelector('#livestream')
+        },
+        numOfWorkers: 8,
+        decoder: {
+            readers: [
+                {"format":"ean_8_reader", "config":{"supplements":[]}},
+                {"format":"ean_reader", "config":{"supplements":[]}},
+                {"format":"ean_reader", "config":{"supplements":['ean_5_reader', 'ean_2_reader']}}
+            ],
         }
-        else{
-          $('#product_image_span').html('<img id="image_generated" class="product_img" style="width: auto;" title="' + val.brand + ' - ' + val.name + ' - ' + val.barcode + '" src="' + val.image + '" />');
+    }, (err) => {
+        if (err) {
+            console.error(err);
+            return
         }
-        
+        Quagga.start();
+    });
+}
 
-        var informations = '<b>Marque</b> - ' + val.brand;
+get('#scanner').addEventListener("input", function (el) {
+    get('#filter-records').innerHTML = ""
 
-        informations += '<br><b>Code-barres</b> - ' + val.barcode;
-        informations += '<br><br><h2>Recyclage</h2><p id="recycleItem"></p>';
+    // Créer l'élément d'affichage
+    let results = document.createElement('ul')
+    results.className = "box"
+    get('#filter-records').appendChild(results)
 
-        informations += checkAlternatives(val.name, val.alimentaire);
+    if (this.value.trim() == "") {
+        get('#scanner').style.borderRadius = "4px"
+        return
+    }
+    else {
+        fetch(`${api}/search/product/${this.value}`)
+        .then(res => res.json())
+        .then(data => {
+            // Limiter l'affichage
+            let count = 0
 
-              
+            // Check si le fetch est correct
+            if (data.success) {
+                data.results.forEach(val => {
+                    count++
+
+                    if (count <= 5) {
+                        results.innerHTML += `
+                            <li>
+                                <a onclick="changeModal('${val.barcode}')" >
+                                    ${val.brand} - ${val.name}
+                                    <img class="image_search" src="${val.image}"></img>
+                                </a>
+                            </li>
+                        `
+                    } 
+                })
+            }
+            else {
+                results.innerHTML = `
+                    <li>
+                        <a>Une erreur est survenue côté serveur !</a>
+                    </li>
+                `
+            }
+
+            // Changement du style, body
+            get('#scanner').style.borderRadius = "4px 4px 0 0"
+            results.innerHTML += `<span style="height: 5px; display: block;"></span>`
+        })
+    }
+})
+
+get('#localisation').addEventListener("input", function (el) {
+    get('#filter-ville').innerHTML = ""
+
+    // Créer l'élément d'affichage
+    let results = document.createElement('ul')
+    results.className = "boxCity box"
+    get('#filter-ville').appendChild(results)
+
+    if (this.value.trim() == "") {
+        get('#localisation').style.borderRadius = "4px"
+        return
+    }
+    else {
+        fetch(`${api}/search/city/${this.value}`)
+        .then(res => res.json())
+        .then(data => {
+            // Limiter l'affichage
+            let count = 0
+
+            // Check si le fetch est correct
+            if (data.success) {
+                data.results.forEach(val => {
+                    count++
+
+                    if (count <= 8) {
+                        results.innerHTML += `
+                            <li>
+                                <a onclick="geolocaliseInput('${val.name}')" >
+                                    ${val.name}
+                                </a>
+                            </li>
+                        `
+                    } 
+                })
+            }
+            else {
+                results.innerHTML = `
+                    <li>
+                        <a>Une erreur est survenue côté serveur !</a>
+                    </li>
+                `
+            }
+
+            // Changement du style, body
+            get('#localisation').style.borderRadius = "4px 4px 0 0"
+            results.innerHTML += `<span style="height: 5px; display: block;"></span>`
+        })
+    }  
+});
+
+/**
+ * Changer de modal vers
+ * - la localisation si l'utilisateur n'est pas déjà localisé
+ * - le produit si l'utilisateur est déjà localisé
+ * @param {Number} barcode 
+ */
+const changeModal = (barcode) => {
+    fetch(`${api}/product/${barcode}`)
+    .then(res => res.json())
+    .then(data => {
+        let val = data.object
+        let title = `${val.brand} - ${val.name} - ${val.barcode}`
+
+        if (document.body.contains(get('#image_generated'))){
+            let href = get('#image_generated').getAttribute("href")
+            if (href == val.image){
+                get('#image_generated').setAttribute('title', title)
+            }
+        }
+        else {
+            get('#product_image_span').innerHTML = `
+                <img id="image_generated" class="product_img" style="width: auto;" 
+                    title="${title}" src="${val.image}"
+                />
+            `
+        }
+
+        let informations = `
+            <b>Marque</b> - ${val.brand} <br>
+            <b>Code-barres</b> - ${val.barcode} <br> <br>
+            <h2>Recyclage</h2><p id="recycleItem"></p>
+            ${checkAlternatives(val.name, val.options)}
+        `
+                
         $('#product_image_span').css('background-color', '#fff0');
-
         $('#product_name').html(val.name);
         $('#product_informations').html(informations);
-
+  
         checkGeolocalisation(val.type);
+    });
+}
+
+/**
+ * Vérifie les alternatives et les affiches
+ * @param {String} name - Nom du produit pour les recettes
+ * @param {Array} options - Options du produit pour les alternatives
+ */
+const checkAlternatives = (name, options) => {
+    let count = 0, results = '';
+    options.forEach (val => {
+        count++
+        switch (val) {
+            case "show_recipes":
+                results += `
+                    <a href="https://www.marmiton.org/recettes/recherche.aspx?type=all&aqt=${name}">Voir des recettes (Marmitton)</a>
+                `
+                break
+        }
+    })
+  
+    if (count > 0){
+        return `<h2>Alternatives</h2> ${results}`
+    }
+    else {
+        return '<h4>Aucune alternatives à été trouvé pour ce produit.</h4>';
+    }
+}
+
+/**
+ * Étape de vérification aprés avoir charger un modal produit.
+ * Si l'utilisateur est déjà géolocalisé, redirection vers
+ * la partie de récupération
+ * Si il ne l'est pas, redirection vers modal geolocalisation
+ * et le type de produit à récupérer sera stocké temporairement
+ * @param {String} type - Type du produit qui sera stocké 
+ */
+const checkGeolocalisation = (type) => {
+    if (geolocalised) {
+        fetchConsignes (type)
+    }
+    else {
+        let input = document.createElement('input')
+        input.setAttribute('id', "comingFromType")
+        input.setAttribute('value', type);
+        input.setAttribute('hidden', true);
+
+        document.body.appendChild(input)
         
-      }
-    });
-  });
+        location.hash = 'geolocalisation';
+    }
 }
 
+/**
+ * Géolocalise l'utilisateur depuis la search bar
+ * dans modal => #geolocalise 
+ * @param {String} city - Nom de la ville choisie
+ */
+const geolocaliseInput = (city) => {
+    // Change les informations initiées
+    geolocalised = true;
 
-// Open the #product article when a product is detected
-Quagga.onDetected(function(result) {
-  var $code = result.codeResult.code,
-      $quagga = 'started';
+    // Récupération du type
+    let input = get('#comingFromType')
+    let type = input.value
 
-  $.get(searchProductUrl + $code, function(products){
-    $.each(products['results'], function(key, val) {
-      if(val.barcode == $code && $quagga != 'stopped'){
-        Quagga.stop();
-        $quagga = 'stopped';
-  
-        if($('#image_generated').length){
-          var hrefImage = $('#image_generated').attr('href');
-          if(hrefImage === val.image){
-            var newTitle = val.brand + ' - ' + val.name + ' - ' + val.barcode;
-            $('#image_generated').attr('title', newTitle);
-          }
-        }
-        else{
-          $('#product_image_span').html('<img id="image_generated" class="product_img" style="width: auto;" title="' + val.brand + ' - ' + val.name + ' - ' + val.barcode + '" src="' + val.image + '" />');
-        }
-        var informations = '<b>Marque</b> - ' + val.brand;
-  
-        informations += '<br><b>Code-barres</b> - ' + val.barcode;
-        informations += '<br><br><h2>Recyclage</h2><p id="recycleItem"></p>';
-  
-        informations += checkAlternatives(val.name, val.alimentaire);
-  
-        $('#product_name').html(val.name);
-        $('#product_informations').html(informations);
-  
-        checkGeolocalisation(val.type);
-  
-        $('#last_scanned').css('color', 'white');
-        $('#last_scanned').html('');
-        $('#status_scan').html('');
-      }
-      else{
-        if($quagga != 'stopped'){
-          $('#last_scanned').css('color', 'red');
-          $('#last_scanned').html($code);
-          $('#status_scan').html('Aucun produit n\'est attribué à ce code-barres. Veuillez réesayez.');
-        }
-      }
-    });
-  });
-});
+    // Stockage du nom de la ville
+    input = document.createElement('input')
+    input.setAttribute('id', "cityName")
+    input.setAttribute('value', city);
+    input.setAttribute('hidden', true);
 
-// Toggle text if checkbox is toggled in #add
-function toggleText (checkboxId, textId) {
-  var checkbox = document.getElementById(checkboxId);
-  if (checkbox.checked == true){
-    $('#' + textId).css('display', 'block');
-  }
-  else{
-    $('#' + textId).css('display', 'none');
-    $('#' + textId).val('');
-  }
+    document.body.appendChild(input)
+  
+    fetchConsignes(type);
 }
 
-// Form validation #add
-$('#formAdd').on('submit', function (e) {
-  times_i_form++;
-  e.preventDefault();
+/**
+ * Géolocalise l'utilisateur depuis le button `Géolocaliser`
+ * dans modal => #geolocalise
+ * Redirige vers la partie de récupération du nom de la ville.
+ */
+const geolocaliseButton = () => {
+    navigator.geolocation.getCurrentPosition(function(position) {
+        // Change les informations initiées
+        latitude = position.coords.latitude;
+        longitude = position.coords.longitude;
+        geolocalised = true
 
-  if(document.getElementById('checkbox_alimentaire').checked) {
-    alimentaire_check = 'yes';
-  }
-  else{
-    alimentaire_check = 'no';
-  }
+        // Récupération du type
+        let input = get('#comingFromType')
+        let type = input.value
 
-  if(times_i_form <= 5){
-    $.ajax({
-      type: 'POST',
-      url: 'https://www.vexcited.ml/api/onetwotrie/suggestProduct.php',
-      data: {
-        name:  $('#nom_add').val(),
-        brand:  $('#marque_add').val(),
-        barcode:  $('#codebarres_add').val(),
-        type: $('#type_add').val(),
-        alimentaire: alimentaire_check,
-        submit: 'submitted'
-      },
-      beforeSend: function() {
-        $("#load_add").html('Chargement...');
-      },
-      success: function (callback) {
-        // Reset all the form
-        $('#formAdd').trigger("reset");
-
-        // Hide the loader GIF
-        $("#load_add").html('Envoyer la demande !');
-
-        // Show the result
-        $('#status_add').html(callback);
-      }
+        // Récupération des consignes de la ville
+        fetchCityName(type)
     });
-  }
-  else{
-    $('#status_add').html('<h4 style="color: red">Demande non envoyée car vous avez dépassé votre quota de session (5)</h4>');
-  }
-});
-
-// Electron HTML
-if($('.menubar').html()){ 
-  $('.menubar').html('');
-  $('.window-controls-container').css('position', 'absolute');
-  $('.window-controls-container').css('right', '0');
-
-  $('.window-title').css('position', 'absolute');
-  $('.window-title').css('top', '50%');
-  $('.window-title').css('left', '50%');
-  $('.window-title').css('transform', 'translate(-50%, -50%)');
-
-  $('.container-after-titlebar').css('overflow', 'auto');
 }
+
+/**
+ * Récupére le nom de la ville lors de la géolocalisation avec le button
+ * @param {String} type - Type du produit stocké précedemment
+ */
+const fetchCityName = (type) => {
+    // Afficher un loader pendant le chargement
+    get("#geoStatus").innerHTML = "Chargement..."
+
+    if (document.body.contains(get("#cityName"))) {
+        fetchConsignes(type)
+    }
+    else {
+        fetch(`https://api-adresse.data.gouv.fr/reverse/?lon=${longitude}&lat=${latitude}`)
+        .then(res => res.json())
+        .then(data => {
+            // Récupération du nom de la ville
+            let city = data.features[0].properties.city
+
+            // Stockage du nom de la ville
+            let input = document.createElement('input')
+            input.setAttribute('id', "cityName")
+            input.setAttribute('value', city);
+            input.setAttribute('hidden', true);
+
+            document.body.appendChild(input)
+
+            fetchConsignes(type)
+        })
+    }
+}
+
+const fetchConsignes = (type) => {
+    // Récupération du nom de la ville
+    let city = get('#cityName').value
+
+    // Suppression du type temporaire
+    if (document.body.contains(get('#comingFromType'))) {
+        get('#comingFromType').remove()
+    }
+
+    // Vérification si les consignes ont déjà été récupérés
+    if (document.body.contains(get('#cityFetchedConsignes'))) {
+        editConsignesInModal(type, city)
+    }
+    else {
+        fetch(`${api}/city/${city}`)
+        .then(res => res.json())
+        .then(data => {
+            // Récupération du nom de la ville
+            let consignes = JSON.stringify(data.object.consignes)
+
+            // Stockage des consignes
+            let input = document.createElement('input')
+            input.setAttribute('id', 'cityFetchedConsignes');
+            input.setAttribute('value', consignes);
+            input.setAttribute('hidden', true);
+
+            document.body.appendChild(input)
+
+            editConsignesInModal(type, city)
+        })
+    }
+}
+
+function editConsignesInModal (type, city) {
+    let consignes = JSON.parse(get('#cityFetchedConsignes').value), emplacement;
+
+    // Récupération de l'emplacement
+    if (type == "autre") {
+        emplacement = "déchetterie"
+    }
+    else {
+        emplacement = consignes[type]
+    }
+
+    // Changement des valeurs dans le modal
+    let message = `
+        Vous recyclez à <strong>${city}</strong><br>Ce produit se met (dans le/à la) <strong>${emplacement}</strong>.
+    `    
+    get('#recycleItem').innerHTML = message;
+  
+    // Réinitialiser le loader du modal `geolocalise`
+    get("#geoStatus").innerHTML = 'Géolocaliser votre appareil';
+  
+    // Redirection vers la page du produit
+    location.hash = 'product';
+}
+
+Quagga.onDetected( function (result) {
+    let detected = result.codeResult.code
+
+    // Changement des status
+    get('#last_scanned').innerHTML = detected
+    let message = `
+        Ce code-barres n'est pas dans la base de données, désolé !
+    `.trim()
+                
+    get('#last_scanned').style.color = "red"
+    get('#status_scan').innerHTML = message
+
+
+    // Vérifie si le code-bares est le meme que le dernier détécté ou pas
+    // (pour avoir des centaines de requêtes à l'API)
+    if (detected != lastDetected) {
+        lastDetected = detected
+        fetch (`${api}/product/${detected}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.object !== null) {
+                Quagga.stop()
+                changeModal(code)
+
+                get('#last_scanned').innerHTML =
+                get('#status_scan').innerHTML = ""
+            }
+        })
+    }
+})
+
+////////////////
+// Formulaire
+fetch(`${api}/allTypes`)
+.then(res => res.json())
+.then(data => {
+    let select = get('#type_add')
+
+    data.forEach(val => {
+        let option = document.createElement('option')
+        option.innerHTML = val
+        select.appendChild(option)
+    })
+})
+
+function getAll (selector) {
+    var parent = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
+    return Array.prototype.slice.call(parent.querySelectorAll(selector), 0);
+}
+
+let form = get('#formAdd')
+form.addEventListener("submit", function (e) {
+    e.preventDefault()
+    get("#load_add").innerHTML = 'Chargement...'
+
+    let name = get('#nom_add').value
+    let brand = get('#marque_add').value
+    let barcode = get('#codebarres_add').value
+    let type = get('#type_add').value
+    let options = []
+
+    getAll('.isAlt').forEach(el => {
+        let val = el.id.replace('checkbox_', '')
+        options.push(val)
+    })
+
+    // Données à passer dans le fetch
+    let data = { name, brand, barcode, type, options }
+    let headers = {
+        "Content-Type": "application/json"
+    }
+
+    fetch(`${api}/suggestProduct`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(data => {
+        get("#load_add").innerHTML = 'Envoyer la demande !'
+        if (data.success) {
+            get('#formAdd').reset()
+            get('#status_add').innerHTML = `<h3 style="color: green;">Demande envoyée avec succées !</h3>`
+        }
+        else {
+            get('#status_add').innerHTML = `<h3 style="color: red;">${data.message}</h3> ${data.err ? "<p style=\"word-break: break-all;\">Message d'erreur: " + JSON.stringify(data.err) + "</p>" : ""}`
+        }
+    })
+})

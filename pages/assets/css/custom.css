@@ -97,3 +97,11 @@ ul li{
     margin: 0 auto;
     width: 100%;
 }
+
+#last_scanned {
+    margin-bottom: 0;
+}
+
+#camera .image.main {
+    margin-bottom: 1.25em;
+}

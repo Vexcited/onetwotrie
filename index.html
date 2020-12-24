@@ -1,222 +1,262 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
-	<head>
-		<title>OneTwoTrie</title>
+  <head>
+    <title>OneTwoTrie</title>
 
-		<!-- CSS -->
-		<link rel="stylesheet" href="./pages/assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="./pages/assets/css/noscript.css" /></noscript>
-		<link rel="stylesheet" href="./pages/assets/css/custom.css" />
+    <!-- CSS -->
+    <link rel="stylesheet" href="./pages/assets/css/main.css" />
+    <noscript
+      ><link rel="stylesheet" href="./pages/assets/css/noscript.css"
+    /></noscript>
+    <link rel="stylesheet" href="./pages/assets/css/custom.css" />
 
-		<!-- Metas -->
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-		<meta http-equiv="Expires" content="0">
-		<meta http-equiv="Pragma" content="no-cache">
-		<meta http-equiv="Cache-Control" content="no-cache">
-		<meta name="language" content="FR">
-		<meta name="url" content="https://vexcited.github.io/onetwotrie/">
-		<meta name="identifier-URL" content="https://vexcited.github.io/onetwotrie/">
-		<meta name="coverage" content="Worldwide">
-		<meta name="twitter:card" content="summary"/>
-		<meta name="description" content="OneTwoTrie, et un pas de plus vers l'écologie" />
-		<meta name="author" content="Vexcited et Invertime" />
-		<meta name="og:title" content="OneTwoTrie"/>
-		<meta name="og:url" content="https://vexcited.github.io/onetwotrie/"/>
-		<meta name="og:image" content="https://vexcited.github.io/onetwotrie/pages/images/icon.png"/>
-		<meta name="og:site_name" content="OneTwoTrie"/>
-		<meta name="og:description" content="OneTwoTrie, et un pas de plus vers l'écologie"/>
-		<meta name="og:email" content="vexitofficial@gmail.com"/>
-		<link rel="shortcut icon" href="https://vexcited.github.io/onetwotrie/pages/images/icon.ico" type="image/x-icon">
-		<meta name="theme-color" content="#3c7c6c" />
-	</head>
-	<body class="is-preload">
-		<input type="hidden" id="json" />
+    <!-- Metas -->
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta http-equiv="Expires" content="0" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <meta name="language" content="FR" />
+    <meta name="url" content="https://vexcited.github.io/onetwotrie/" />
+    <meta
+      name="identifier-URL"
+      content="https://vexcited.github.io/onetwotrie/"
+    />
+    <meta name="coverage" content="Worldwide" />
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="description"
+      content="OneTwoTrie, et un pas de plus vers l'écologie"
+    />
+    <meta name="author" content="Vexcited et Invertime" />
+    <meta name="og:title" content="OneTwoTrie" />
+    <meta name="og:url" content="https://vexcited.github.io/onetwotrie/" />
+    <meta
+      name="og:image"
+      content="https://vexcited.github.io/onetwotrie/pages/images/icon.png"
+    />
+    <meta name="og:site_name" content="vexcited.github.io/onetwotrie" />
+    <meta
+      name="og:description"
+      content="OneTwoTrie, et un pas de plus vers l'écologie"
+    />
+    <meta name="og:email" content="vexitofficial@gmail.com" />
+    <link
+      rel="shortcut icon"
+      href="https://vexcited.github.io/onetwotrie/pages/images/icon.ico"
+      type="image/x-icon"
+    />
+    <meta name="theme-color" content="#3c7c6c" />
+  </head>
+  <body class="is-preload">
+    <div id="wrapper">
+      <header id="header">
+        <div class="content">
+          <div class="inner">
+            <h1>OneTwoTrie</h1>
+            <input
+              type="text"
+              class="custom_search"
+              placeholder="Rechercher un produit"
+              autocomplete="off"
+              onFocus="show(this)"
+              onFocusOut="hide(this)"
+              name="scanner"
+              id="scanner"
+            />
+            <div id="filter-records"></div>
+          </div>
+        </div>
+        <nav>
+          <ul>
+            <li><a href="#why">Pourquoi ?</a></li>
+            <li><a href="#camera">Scan caméra</a></li>
+            <li><a href="#about">A propos</a></li>
+          </ul>
+        </nav>
+      </header>
 
-			<div id="wrapper">
+      <div id="main">
+        <!-- Camera scanner -->
+        <article id="camera">
+          <h2 class="major">Scan</h2>
+          <span class="image main"
+            ><div id="livestream" class="viewport"></div>
+            Postionnez votre caméra devant le code-barres de façon à ce qu'il
+            soit bien visible.</span
+          >
+          <h2 id="last_scanned"></h2>
+          <p id="status_scan"></p>
+        </article>
 
-				<header id="header">
-					<div class="content">
-						<div class="inner">
-							<h1>OneTwoTrie</h1>
-							<input type="text" class="custom_search" placeholder="Rechercher un produit" autocomplete="off" onFocus="show('scanner')" onFocusOut="hide('scanner')" name="scanner" id="scanner">
-							<div id="filter-records"></div>
-						</div>
-					</div>
-					<nav>
-						<ul>
-							<li><a href="#why">Pourquoi ?</a></li>
-							<li><a href="#camera">Scan caméra</a></li>
-							<li><a href="#about">A propos</a></li>
-						</ul>
-					</nav>
-				</header>
+        <!-- Why -->
+        <article id="why">
+          <h2 class="major">Pourquoi ?</h2>
+          <h3>But du projet</h3>
+          <p>
+            Ce projet a pour but de mieux recycler ses déchets. Comment ?
+            Scannez le code-barres et diverses informations s'afficheront, comme
+            par exemple :
+          </p>
+          <h3>- Dans quelle poubelle la déposer.</h3>
+          <h3>
+            - Comment faire pour en éviter la surconsommation (recettes,
+            etc...).
+          </h3>
+        </article>
 
-				<div id="main">
+        <!-- Latitude and Longitude Check -->
+        <article id="geolocalisation">
+          <h2 class="major">Géolocalisation</h2>
 
-				<!-- Camera scanner -->
-					<article id="camera">
-						<h2 class="major">Scan</h2>
-						<span class="image main"><div id="livestream" class="viewport"></div>
-							Postionnez votre caméra devant le code-barres de façon à ce qu'il soit bien visible.</span>
-						<h3 id="last_scanned"></h3>
-						<p id="status_scan"></p>
-					</article>
+          <input type="hidden" name="geoTypeBefore" id="geoTypeBefore" />
 
-				<!-- Why -->
-					<article id="why">
-						<h2 class="major">Pourquoi ?</h2>
-						<h3>But du projet</h3>
-						<p>Ce projet a pour but de mieux recycler ses déchets. Comment ? Scannez le code-barres et diverses informations s'afficheront, comme par exemple :
-							<h4>- Dans quelle poubelle la déposer.</h4>
-							<h4>- Comment faire pour en éviter la surconsommation (recettes, etc...).</h4>
-						</p>
-					</article>
+          <p style="text-align: center">
+            <a
+              class="button primary"
+              id="geoStatus"
+              onClick="geolocaliseButton()"
+              >Géolocaliser votre appareil</a
+            >
+          </p>
 
-				<!-- Latitude and Longitude Check -->
-					<article id="geolocalisation">
-						<h2 class="major">Géolocalisation</h2>
+          <h3 style="text-align: center">ou</h3>
 
-						<input type="hidden" name="geoTypeBefore" id="geoTypeBefore" />
-						
-						<p style="text-align: center;">
-							<a class="button primary" id="geoStatus" onClick="geolocalise()" href="javascript:void(0);">Géolocaliser votre appareil</a>
-						</p>
+          <div class="field">
+            <label for="localisation">Rechercher une ville</label>
+            <input
+              type="text"
+              id="localisation"
+              autocomplete="off"
+              onFocus="show(this)"
+              onFocusOut="hide(this)"
+              placeholder="ex.: Limoges"
+            />
+            <div id="filter-ville"></div>
+          </div>
 
-						<h3 style="text-align: center;">ou</h3>
+          <br />
+        </article>
 
-						<div class="field">
-							<label for="localisation">Rechercher une ville</label>
-							<input type="text" name="localisation" id="localisation" autocomplete="off" onFocus="show('localisation')" onFocusOut="hide('localisation')" placeholder="ex.: Limoges" />
-							<div id="filter-ville"></div>
-						</div>
+        <!-- Product -->
+        <article id="product">
+          <h2 class="major">Produit</h2>
+          <span class="image main" id="product_image_span"></span>
+          <h2 id="product_name">Une erreur s'est produite</h2>
+          <p id="product_informations">Réesayez de scanner le produit.</p>
+        </article>
 
-						<br>
-					</article>
+        <!-- Suggérer un produit -->
+        <article id="add">
+          <h2 class="major">Ajouter</h2>
+          <section>
+            <h3>- Informations -</h3>
 
-					<input type="hidden" name="cityGeo" id="cityGeo" />
-					<input type="hidden" name="consignesCity" id="consignesCity" />
-					
+            <form id="formAdd">
+              <div class="fields">
+                <div class="field half">
+                  <label for="nom_add">Nom</label>
+                  <input
+                    type="text"
+                    id="nom_add"
+                    autocomplete="off"
+                    placeholder="Eau de source 150ml"
+                  />
+                </div>
 
-				<!-- Product -->
-					<article id="product">
-						<h2 class="major">Produit</h2>
-						<span class="image main" id="product_image_span"></span>
-						<h2 id="product_name">Une erreur s'est produite</h2>
-						<p id="product_informations">Réesayez de scanner le produit.</p>
-					</article>
+                <div class="field half">
+                  <label for="marque_add">Marque</label>
+                  <input
+                    type="text"
+                    name="brand"
+                    id="marque_add"
+                    autocomplete="off"
+                    placeholder="Cristalline"
+                  />
+                </div>
 
-				<!-- Suggérer un produit -->
-					<article id="add">
-						<h2 class="major">Ajouter</h2>
-						<section>
-							<h3>- Informations -</h3>
+                <div class="field">
+                  <label for="codebarres_add">Code-Barres</label>
+                  <input
+                    type="text"
+                    name="barcode"
+                    id="codebarres_add"
+                    autocomplete="off"
+                    placeholder="3274080005003 (13 ou 8 lettres)"
+                  />
+                </div>
 
-							<form id="formAdd">
-								<div class="fields">
-									<div class="field half">
-										<label for="nom_add">Nom</label>
-										<input type="text" name="name" id="nom_add" autocomplete="off" placeholder="Eau de source 150ml" />
-									</div>
+                <div class="field">
+                  <h3>- Recyclage -</h3>
+                  <label for="type_add">Type de produit</label>
+                  <select id="type_add">
+                  </select>
+                </div>
 
-									<div class="field half">
-										<label for="marque_add">Marque</label>
-										<input type="text" name="brand" id="marque_add" autocomplete="off" placeholder="Cristalline" />
-									</div>
+                <div class="field">
+                  <h3>- Alternatives -</h3>
+                  <input type="checkbox" id="checkbox_show_recipes" class="isAlt" />
+				  <label for="checkbox_show_recipes">
+					  Proposer des recettes ? (produit alimentaire)
+				</label>
+                </div>
+              </div>
 
-									<div class="field">
-										<label for="codebarres_add">Code-Barres</label>
-										<input type="text" name="barcode" id="codebarres_add" autocomplete="off" placeholder="3274080005003 (13 ou 8 lettres)" />
-									</div>
+              <button id="submit">
+                <span id="load_add">Envoyer la demande !</span>
+              </button>
+			</form>
+			<span id="status_add"></span>
+          </section>
+        </article>
 
-									<div class="field">
-										<h3>- Recyclage -</h3>
-										<label for="type_add">Type de produit</label>
-										<select id="type_add" name="type_add">
-											<option value="autre" selected>Autre (Déchetterie)</option>
+        <!-- À propos -->
+        <article id="about">
+          <h2 class="major">À propos</h2>
+          <h1 style="margin: 0">OneTwoTrie</h1>
+          <h3>...et un pas de plus vers l'écologie</h3>
 
-											<option value="potbocalverre">Pot/Bocal en verre</option>
-											<option value="potyaourt">Pot de yaourt</option>
-											<option value="papier">Papier</option>
+          <p>
+            Ce site a été fait pour l'option <b>Parcours Excellence</b> du
+            <b>Collège Albert Calmette</b> à <b>Limoges</b>. Due à la COVID-19,
+            le concours fut annulé. Mais deux élèves ont continué le projet, et
+            c'est pour cela que ce site est encore en ligne.
+          </p>
 
-											<option value="briquealimentaire">Brique alimentaire (jus, lait, ...)</option>
-											<option value="boitecarton">Boîte en carton</option>
-											
-											<option value="bouteilleplastique">Bouteille en plastique</option>
-											<option value="emballageplastique">Emballage en plastique</option>
-											<option value="bouteilleverre">Bouteille en verre</option>
-											<option value="bouteillemetal">Bouteille en métal</option>
-											<option value="boitemetal">Boite en métal</option>
+          <h3><a href="./docs/">+ d'informations</a></h3>
 
-											<option value="porcelaine">Porcelaine</option>
+          <hr />
 
-											<option value="canettealuminium">Canette en aluminium</option>
-										</select>
-									</div>
+          <h2>Nous contacter</h2>
+          <p>
+            <a href="mailto:vexitofficial@gmail.com">Mikkel (Vexcited)</a>
+            <br />
+            <a href="mailto:invertime.off@gmail.com">Jules (Invertime)</a>
+          </p>
+        </article>
+      </div>
 
-									<div class="field">
-										<h3>- Alternatives -</h3>
-										<input type="checkbox" id="checkbox_alimentaire">
-										<label for="checkbox_alimentaire" name="alimentaire">Proposer des recettes ? (produit alimentaire)</label>
-									</div>
+      <!-- Footer -->
+      <footer id="footer">
+        <a href="#add" class="copyright">Ajouter un produit ?</a>
+      </footer>
+    </div>
 
-								</div>
+    <!-- Background -->
+    <div id="bg"></div>
 
-								<span id="status_add"></span>
-								<button id="submit"><span id="load_add">Envoyer la demande !</span></button>
-
-							</form>
-						</section>
-					</article>
-
-				<!-- À propos -->
-					<article id="about">
-						<h2 class="major">À propos</h2>
-						<h1 style="margin: 0;">OneTwoTrie</h1>
-						<h3>...et un pas de plus vers l'écologie</h3>
-								
-						<p>Ce site a été fait pour l'option <b>Parcours Excellence</b> du <b>Collège Albert Calmette</b> à <b>Limoges</b>.
-							Due à la COVID-19, le concours fut annulé. Mais deux élèves ont continué le projet, et c'est pour cela que ce site est encore en ligne.
-						</p>
-						
-						<h3><a href="./docs/">+ d'informations</a></h3>
-
-						<hr>
-						
-						<h2>Nous contacter</h2>
-						<p>
-							<a href="mailto:vexitofficial@gmail.com">Mikkel (Vexcited)</a> <br />
-							<a href="mailto:invertime.off@gmail.com">Jules (Invertime)</a>
-						</p>
-					</article>
-				</div>
-
-			<!-- Footer -->
-				<footer id="footer">
-					<a href="#add" class="copyright">Ajouter un produit ?</a>
-				</footer>
-
-			</div>
-
-		<!-- Background -->
-			<div id="bg"></div>
-
-		<!-- Electron -->
-			<script>if(typeof module === 'object'){window.module = module; module = undefined;}</script>
-
-			<!-- Scripts -->
-				<script src="./pages/assets/js/jquery.min.js"></script>
-				<script src="./pages/assets/js/browser.min.js"></script>
-				<script src="./pages/assets/js/breakpoints.min.js"></script>
-				<script src="./pages/assets/js/util.js"></script>
-				<script src="./pages/assets/js/adapter-latest.js"></script>
-				<script src="./pages/assets/js/quagga.min.js"></script>
-				<script src="./pages/assets/js/functions.js"></script>
-				<script src="./pages/assets/js/main.js"></script>
-
-		<!-- Electron -->
-			<script>if (window.module) module = window.module;</script>
-
-	</body>
+    <!-- Scripts -->
+    <script src="./pages/assets/js/jquery.min.js"></script>
+    <script src="./pages/assets/js/browser.min.js"></script>
+    <script src="./pages/assets/js/breakpoints.min.js"></script>
+    <script src="./pages/assets/js/util.js"></script>
+    <script src="./pages/assets/js/adapter-latest.js"></script>
+    <script src="./pages/assets/js/quagga.min.js"></script>
+    <script src="./pages/assets/js/functions.js"></script>
+    <script src="./pages/assets/js/main.js"></script>
+  </body>
 </html>
