@@ -6,14 +6,14 @@ Uniquement disponible en France.
 https://vexcited.github.io/onetwotrie/
 
 # À propos du projet scolaire...
-Projet scolaire commencé en Décembre 2019 avec le Parcours Excellence du Collège Albert Calmette, Limoges (avec nos professeurs, Mr JEGAT et Mme PASCAL). La représentation a été annulée dù à la pandémie de COVID-19; cependant le projet n'a cessé d'évoluer. Moi (Vexcited) et [Jules (Invertime)](https://github.com/Invertime) avons continué ce projet pour enrichir et appronfondir nos connaissances en développement web. Finalement, une version finale sera proposé en Août 2020, mais le projet s'est réellement terminé en Janvier 2021.
+Projet scolaire commencé en Décembre 2019 avec le Parcours Excellence du [Collège Albert Calmette, Limoges](http://www.clg-calmette.ac-limoges.fr/) (avec nos professeurs, Mr JEGAT et Mme PASCAL). La représentation a été annulée dù à la pandémie de COVID-19; cependant le projet n'a cessé d'évoluer. Moi (Vexcited) et [Jules (Invertime)](https://github.com/Invertime) avons continué ce projet pour enrichir et appronfondir nos connaissances en développement web. Finalement, une version finale sera proposé en Août 2020, mais le projet s'est réellement terminé en Janvier 2021.
 
-1. [Intro](https://github.com/Vexcited/onetwotrie/#onetwotrie-et-un-pas-de-plus-vers-l%C3%A9cologie)
-2. [Application PC](https://github.com/Vexcited/onetwotrie/#2-application-pc)
-3. [Application Mobile](https://github.com/Vexcited/onetwotrie/#3-application-mobile)
-4. [API (en cours)](https://github.com/Vexcited/onetwotrie/#4-api)
+1. [Présentation](https://github.com/Vexcited/onetwotrie/#%C3%A0-propos-du-projet-scolaire)
+2. [Application Web](https://github.com/Vexcited/onetwotrie/#application-web-consultable-par-tout-le-monde-depuis-le-navigateur-)
+3. [Application Mobile](https://github.com/Vexcited/onetwotrie/#application-mobile)
+4. [API (en cours)](https://github.com/Vexcited/onetwotrie/#api)
 
-## Application Web, consultable par tous le monde depuis le navigateur !
+## Application Web, consultable par tout le monde depuis le navigateur !
 [La voici !](https://vexcited.github.io/onetwotrie)
 Vous serez redirigés sur l'application. Dès lors, vous pouvez **rechercher un produit, scanner un code-barres ou contribuer en suggérant un produit**
 Lorsque vous scannez un produit (par recherche ou scan par caméra), on vous demandera votre Localisation.
