@@ -5,7 +5,7 @@ Ce site reprend un peu l'idée de consignesdetri.fr de Citeo mais avec un systè
 Uniquement disponible en France.
 https://vexcited.github.io/onetwotrie/
 
-# À propos du projet scolaire...
+## À propos du projet scolaire...
 Projet scolaire commencé en Décembre 2019 avec le Parcours Excellence du [Collège Albert Calmette, Limoges](http://www.clg-calmette.ac-limoges.fr/) (avec nos professeurs, Mr JEGAT et Mme PASCAL). La représentation a été annulée dù à la pandémie de COVID-19; cependant le projet n'a cessé d'évoluer. Moi (Vexcited) et [Jules (Invertime)](https://github.com/Invertime) avons continué ce projet pour enrichir et appronfondir nos connaissances en développement web. Finalement, une version finale sera proposé en Août 2020, mais le projet s'est réellement terminé en Janvier 2021.
 
 1. [Présentation](https://github.com/Vexcited/onetwotrie/#%C3%A0-propos-du-projet-scolaire)
@@ -27,6 +27,8 @@ Aprés s'être géolocalisé, vous verrez des informations concernant le produit
 [Voici la documentation de l'API.](https://www.notion.so/API-Public-98790aaf19d043afbe5ea21b0ca14178) <br>
 L'*endpoint* est **https://api.vexcited.ml/onetwotrie** !
 
-### Credits
+<hr>
+
+## Credits
 - [Collège Albert Calmette](http://www.clg-calmette.ac-limoges.fr/)
 - [Jules (Invertime)](https://github.com/Invertime)
