@@ -190,8 +190,9 @@ const changeModal = (barcode) => {
         let title = `${val.brand} - ${val.name} - ${val.barcode}`
 
         if (document.body.contains(get('#image_generated'))){
-            let href = get('#image_generated').getAttribute("href")
-            if (href == val.image){
+            let href = get('#image_generated').getAttribute("src")
+            if (href != val.image){
+                get('#image_generated').setAttribute('src', val.image)
                 get('#image_generated').setAttribute('title', title)
             }
         }
@@ -213,7 +214,10 @@ const changeModal = (barcode) => {
         $('#product_image_span').css('background-color', '#fff0');
         $('#product_name').html(val.name);
         $('#product_informations').html(informations);
-  
+
+        // Réinitialisation dès l'initialisation pour avoid errors
+        // dès qu'un nouveau produit est demandé
+        get("#geoStatus").innerHTML = "Géolocaliser votre appareil"  
         checkGeolocalisation(val.type);
     });
 }
@@ -253,17 +257,18 @@ const checkAlternatives = (name, options) => {
  * @param {String} type - Type du produit qui sera stocké 
  */
 const checkGeolocalisation = (type) => {
+    if(!document.body.contains(get('#comingFromType'))) {
+        let input = document.createElement('input')
+            input.setAttribute('id', "comingFromType")
+            input.setAttribute('value', type);
+            input.setAttribute('hidden', true);
+        document.body.appendChild(input)
+    }
+
     if (geolocalised) {
         fetchConsignes (type)
     }
     else {
-        let input = document.createElement('input')
-        input.setAttribute('id', "comingFromType")
-        input.setAttribute('value', type);
-        input.setAttribute('hidden', true);
-
-        document.body.appendChild(input)
-        
         location.hash = 'geolocalisation';
     }
 }
@@ -278,18 +283,23 @@ const geolocaliseInput = (city) => {
     geolocalised = true;
 
     // Récupération du type
-    let input = get('#comingFromType')
-    let type = input.value
-
-    // Stockage du nom de la ville
-    input = document.createElement('input')
-    input.setAttribute('id', "cityName")
-    input.setAttribute('value', city);
-    input.setAttribute('hidden', true);
-
-    document.body.appendChild(input)
-  
-    fetchConsignes(type);
+    if (document.body.contains(get('#comingFromType'))) {
+        let input = get('#comingFromType')
+        let type = input.value
+    
+        // Stockage du nom de la ville
+        input = document.createElement('input')
+        input.setAttribute('id', "cityName")
+        input.setAttribute('value', city);
+        input.setAttribute('hidden', true);
+    
+        document.body.appendChild(input)
+      
+        fetchConsignes(type);
+    }
+    else {
+        get("#geoStatus").innerHTML = "Erreur, re-scannez le produit"
+    }
 }
 
 /**
@@ -302,14 +312,21 @@ const geolocaliseButton = () => {
         // Change les informations initiées
         latitude = position.coords.latitude;
         longitude = position.coords.longitude;
-        geolocalised = true
 
         // Récupération du type
-        let input = get('#comingFromType')
-        let type = input.value
+        // Si le type, existe, ajouter geolocalised (avoid errors)
+        if (document.body.contains(get('#comingFromType'))) {
+            geolocalised = true
 
-        // Récupération des consignes de la ville
-        fetchCityName(type)
+            let input = get('#comingFromType')
+            let type = input.value
+
+            // Récupération des consignes de la ville
+            fetchCityName(type)
+        }
+        else {
+            get("#geoStatus").innerHTML = "Erreur, re-scannez le produit"
+        }
     });
 }
 
@@ -344,13 +361,19 @@ const fetchCityName = (type) => {
     }
 }
 
+/**
+ * Récupére les consignes de la ville dans l'input #cityName
+ * @param {String} type - Type de produit à rechercher
+ */
 const fetchConsignes = (type) => {
     // Récupération du nom de la ville
-    let city = get('#cityName').value
-
-    // Suppression du type temporaire
-    if (document.body.contains(get('#comingFromType'))) {
-        get('#comingFromType').remove()
+    if (document.body.contains(get('#cityName'))) {
+        var city = get('#cityName').value
+    }
+    else {
+        geolocalised = false
+        checkGeolocalisation(type)
+        return
     }
 
     // Vérification si les consignes ont déjà été récupérés
@@ -362,23 +385,43 @@ const fetchConsignes = (type) => {
         .then(res => res.json())
         .then(data => {
             // Récupération du nom de la ville
-            let consignes = JSON.stringify(data.object.consignes)
+            if (data.object !== null) {
+                var consignes = JSON.stringify(data.object.consignes)
 
-            // Stockage des consignes
-            let input = document.createElement('input')
-            input.setAttribute('id', 'cityFetchedConsignes');
-            input.setAttribute('value', consignes);
-            input.setAttribute('hidden', true);
+                // Stockage des consignes
+                let input = document.createElement('input')
+                input.setAttribute('id', 'cityFetchedConsignes');
+                input.setAttribute('value', consignes);
+                input.setAttribute('hidden', true);
 
-            document.body.appendChild(input)
+                document.body.appendChild(input)
 
-            editConsignesInModal(type, city)
+                // Suppression du type temporaire
+                if (document.body.contains(get('#comingFromType'))) {
+                    get('#comingFromType').remove()
+                }
+
+                editConsignesInModal(type, city)     
+            }
+            else {
+                if (document.body.contains(get('#cityName'))) get('#cityName').remove();
+                get("#geoStatus").innerHTML = "Votre ville n'est pas répertoriée !"
+                checkGeolocalisation(type)
+            }                
         })
     }
 }
 
 function editConsignesInModal (type, city) {
-    let consignes = JSON.parse(get('#cityFetchedConsignes').value), emplacement;
+    let emplacement;
+
+    if (document.body.contains(get('#cityFetchedConsignes'))) {
+        var consignes = JSON.parse(get('#cityFetchedConsignes').value)
+    }
+    else {
+        checkGeolocalisation(type)
+        return
+    }
 
     // Récupération de l'emplacement
     if (type == "autre") {
@@ -401,6 +444,8 @@ function editConsignesInModal (type, city) {
     location.hash = 'product';
 }
 
+////////////////
+// Caméra
 Quagga.onDetected( function (result) {
     let detected = result.codeResult.code
 
@@ -423,7 +468,7 @@ Quagga.onDetected( function (result) {
         .then(data => {
             if (data.object !== null) {
                 Quagga.stop()
-                changeModal(code)
+                changeModal(detected)
 
                 get('#last_scanned').innerHTML =
                 get('#status_scan').innerHTML = ""
