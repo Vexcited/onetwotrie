@@ -1,5 +1,9 @@
-if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('./pages/assets/js/serviceWorker.js')
-      .then(reg => console.log('Service Worker registered'))
-      .catch(err => console.log('Service Worker not registered', err));
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js');
+      
+      navigator.serviceWorker.ready.then(function (registration) {
+          console.log('Service worker successfully registered on scope', registration.scope);
+      }).catch(e => console.error("SW Failed", e));
+  });
 }
