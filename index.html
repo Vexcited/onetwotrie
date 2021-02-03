@@ -3,12 +3,19 @@
   <head>
     <title>OneTwoTrie</title>
 
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="/pages/images/icon.png" />
+    <meta name="apple-mobile-web-app-status-bar" content="#3C7C6C" />
+    <meta name="theme-color" content="#3C7C6C" />
+    <script src="/pages/assets/js/app.js"></script>
+
     <!-- CSS -->
-    <link rel="stylesheet" href="./pages/assets/css/main.css" />
-    <noscript
-      ><link rel="stylesheet" href="./pages/assets/css/noscript.css"
-    /></noscript>
-    <link rel="stylesheet" href="./pages/assets/css/custom.css" />
+    <link rel="stylesheet" href="/pages/assets/css/main.css" />
+    <noscript>
+      <link rel="stylesheet" href="/pages/assets/css/noscript.css"/>
+    </noscript>
+    <link rel="stylesheet" href="/pages/assets/css/custom.css" />
 
     <!-- Metas -->
     <meta charset="UTF-8" />
@@ -21,36 +28,35 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Cache-Control" content="no-cache" />
     <meta name="language" content="FR" />
-    <meta name="url" content="https://vexcited.github.io/onetwotrie/" />
+    <meta name="url" content="https://apps.vexcited.ml/onetwotrie/" />
     <meta
       name="identifier-URL"
-      content="https://vexcited.github.io/onetwotrie/"
+      content="https://apps.vexcited.ml/onetwotrie/"
     />
     <meta name="coverage" content="Worldwide" />
     <meta name="twitter:card" content="summary" />
     <meta
       name="description"
-      content="OneTwoTrie, et un pas de plus vers l'écologie"
+      content="OneTwoTrie: Un pas de plus vers l'écologie"
     />
-    <meta name="author" content="Vexcited et Invertime" />
+    <meta name="author" content="Vexcited & Invertime" />
     <meta name="og:title" content="OneTwoTrie" />
-    <meta name="og:url" content="https://vexcited.github.io/onetwotrie/" />
+    <meta name="og:url" content="https://apps.vexcited.ml/onetwotrie/" />
     <meta
       name="og:image"
-      content="https://vexcited.github.io/onetwotrie/pages/images/icon.png"
+      content="https://apps.github.io/onetwotrie/pages/images/icon.png"
     />
     <meta name="og:site_name" content="vexcited.github.io/onetwotrie" />
     <meta
       name="og:description"
-      content="OneTwoTrie, et un pas de plus vers l'écologie"
+      content="OneTwoTrie: Un pas de plus vers l'écologie"
     />
     <meta name="og:email" content="vexitofficial@gmail.com" />
     <link
       rel="shortcut icon"
-      href="./pages/images/icon.ico"
+      href="/pages/images/icon.ico"
       type="image/x-icon"
     />
-    <meta name="theme-color" content="#3c7c6c" />
   </head>
   <body class="is-preload">
     <div id="wrapper">
@@ -105,16 +111,19 @@
           <h3>- Dans quelle poubelle la déposer.</h3>
           <h3>
             - Alternatives du produit. (recettes, DIY, seconde vie de l'objet)
-		  </h3>
-		  <h3>
-			- Affiche des déchetteries / conteneurs à verre proches de l'utilisateur
-			sur une carte (tel que OpenStreetMap)
-		  </h3>
-		  
-		  <span><i>
-			  (ce ne sont que des exemples qui devaient êtres évoqués lors de la représentation.
-			  c'est pour celà que toutes ces fonctionnalités ne sont pas inclus sur l'application web/mobile)
-		  </i></span>
+          </h3>
+          <h3>
+            - Affiche des déchetteries / conteneurs à verre proches de
+            l'utilisateur sur une carte (tel que OpenStreetMap)
+          </h3>
+
+          <span
+            ><i>
+              (ce ne sont que des exemples qui devaient êtres évoqués lors de la
+              représentation. c'est pour celà que toutes ces fonctionnalités ne
+              sont pas inclus sur l'application web/mobile)
+            </i></span
+          >
         </article>
 
         <!-- Latitude and Longitude Check -->
@@ -201,24 +210,27 @@
                 <div class="field">
                   <h3>- Recyclage -</h3>
                   <label for="type_add">Type de produit</label>
-                  <select id="type_add">
-                  </select>
+                  <select id="type_add"></select>
                 </div>
 
                 <div class="field">
                   <h3>- Alternatives -</h3>
-                  <input type="checkbox" id="checkbox_show_recipes" class="isAlt" />
-				  <label for="checkbox_show_recipes">
-					  Proposer des recettes ? (produit alimentaire)
-				</label>
+                  <input
+                    type="checkbox"
+                    id="checkbox_show_recipes"
+                    class="isAlt"
+                  />
+                  <label for="checkbox_show_recipes">
+                    Proposer des recettes ? (produit alimentaire)
+                  </label>
                 </div>
               </div>
 
               <button id="submit">
                 <span id="load_add">Envoyer la demande !</span>
               </button>
-			</form>
-			<span id="status_add"></span>
+            </form>
+            <span id="status_add"></span>
           </section>
         </article>
 
@@ -229,16 +241,28 @@
           <h3>...et un pas de plus vers l'écologie</h3>
 
           <p>
-			<b>Projet scolaire</b> commencé en <b>Décembre 2019</b> avec <b>le Parcours
-			Excellence du Collège Albert Calmette, Limoges</b>
-			(avec nos professeurs, <b>Mr JEGAT et Mme PASCAL</b>).
-			La représentation a été annulée dù à la pandémie de COVID-19;
-			cependant le projet n'a cessé d'évoluer. <b><a href="https://github.com/Vexcited">Moi (Mikkel RINGAUD, Vexcited)</a></b> et
-			<b><a href="https://github.com/Invertime">Jules CHEVALLET</a> (Invertime)</b> avons continué ce projet
-			pour enrichir et appronfondir nos connaissances en développement.
+            <b>Projet scolaire</b> commencé en <b>Décembre 2019</b> avec
+            <b>le Parcours Excellence du Collège Albert Calmette, Limoges</b>
+            (avec nos professeurs, <b>Mr JEGAT et Mme PASCAL</b>). La
+            représentation a été annulée dù à la pandémie de COVID-19; cependant
+            le projet n'a cessé d'évoluer.
+            <b
+              ><a href="https://github.com/Vexcited"
+                >Moi (Mikkel RINGAUD, Vexcited)</a
+              ></b
+            >
+            et
+            <b
+              ><a href="https://github.com/Invertime">Jules CHEVALLET</a>
+              (Invertime)</b
+            >
+            avons continué ce projet pour enrichir et appronfondir nos
+            connaissances en développement.
           </p>
-			
-          <a href="https://github.com/Vexcited/onetwotrie"><i class="fab fa-github" aria-hidden="true"></i></a>
+
+          <a href="https://github.com/Vexcited/onetwotrie"
+            ><i class="fab fa-github" aria-hidden="true"></i
+          ></a>
         </article>
       </div>
 
@@ -252,13 +276,13 @@
     <div id="bg"></div>
 
     <!-- Scripts -->
-    <script src="./pages/assets/js/jquery.min.js"></script>
-    <script src="./pages/assets/js/browser.min.js"></script>
-    <script src="./pages/assets/js/breakpoints.min.js"></script>
-    <script src="./pages/assets/js/util.js"></script>
-    <script src="./pages/assets/js/adapter-latest.js"></script>
-    <script src="./pages/assets/js/quagga.min.js"></script>
-    <script src="./pages/assets/js/functions.js"></script>
-    <script src="./pages/assets/js/main.js"></script>
+    <script src="/pages/assets/js/jquery.min.js"></script>
+    <script src="/pages/assets/js/browser.min.js"></script>
+    <script src="/pages/assets/js/breakpoints.min.js"></script>
+    <script src="/pages/assets/js/util.js"></script>
+    <script src="/pages/assets/js/adapter-latest.js"></script>
+    <script src="/pages/assets/js/quagga.min.js"></script>
+    <script src="/pages/assets/js/functions.js"></script>
+    <script src="/pages/assets/js/main.js"></script>
   </body>
 </html>
