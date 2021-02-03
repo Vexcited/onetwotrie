@@ -1,14 +1,14 @@
 {
     "name": "OneTwoTrie",
     "short_name": "OneTwoTrie",
-    "start_url": "/onetwotrie/index.html",
+    "start_url": ".",
     "display": "standalone",
     "background_color": "#3C7C6C",
     "theme_color": "#3C7C6C", 
     "orientation": "portrait-primary",
     "icons": [
       {
-        "src": "/onetwotrie/pages/images/logo.png",
+        "src": "pages/images/icon.png",
         "type": "image/png", 
         "sizes": "256x256"
       }
